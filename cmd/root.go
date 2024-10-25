@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -13,6 +12,7 @@ import (
 )
 
 var cfgFile string
+var repoName string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -46,6 +46,7 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.spf13-cobra-playground.yaml)")
+	rootCmd.PersistentFlags().StringVarP(&repoName, "repo", "R", "", "repo name in format OWNER/REPO")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -69,6 +70,8 @@ func initConfig() {
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
+	viper.SetEnvPrefix("gh")
+	viper.BindPFlag("repo", rootCmd.Flags().Lookup("repo"))
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
